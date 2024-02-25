@@ -1,0 +1,15 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+.DS_Store
+
+# testing
+/coverage
+
+#key config
+/config/serviceKey.js
+
+# production
+/build
