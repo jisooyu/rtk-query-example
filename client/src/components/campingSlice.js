@@ -1,11 +1,10 @@
 import { createSelector, createEntityAdapter } from '@reduxjs/toolkit';
-import { sub } from 'date-fns';
 import { campingApiSlice } from '../store/apis/campingApiSlice';
 
 const campingAdapter = createEntityAdapter({
 	// customizing the selectId
 	selectId: (camp) => camp.contentId,
-	sortComparer: (a, b) => b.date.localeCompare(a.date),
+	sortComparer: (a, b) => b.facltNm.localeCompare(a.facltNm),
 });
 
 const initialState = campingAdapter.getInitialState();
@@ -15,18 +14,30 @@ export const extendedApiSlice = campingApiSlice.injectEndpoints({
 		getCampings: builder.query({
 			query: () => '/camps',
 			transformResponse: (responseData) => {
-				let min = 1;
-				const loadedCamps = responseData.map((camp) => {
-					if (!camp?.date)
-						camp.date = sub(new Date(), { minutes: min++ }).toISOString();
-					return camp;
-				});
-				return campingAdapter.setAll(initialState, loadedCamps);
+				try {
+					return campingAdapter.setAll(initialState, responseData);
+				} catch (error) {
+					console.error('Error transforming response data:', error);
+					return initialState;
+				}
 			},
-			providesTags: (result, error, arg) => [
-				{ type: 'Camp', id: 'LIST' },
-				...result.ids.map((id) => ({ type: 'Camp', id: arg?.contentId ?? id })),
-			],
+			providesTags: (result, error, arg) => {
+				try {
+					const tags = [
+						{ type: 'Camp', id: 'LIST' },
+						...(result.ids
+							? result.ids.map((id) => ({
+									type: 'Camp',
+									id: arg?.contentId ?? id,
+							  }))
+							: []),
+					];
+					return tags;
+				} catch (error) {
+					console.error('Error generating tags:', error);
+					return [];
+				}
+			},
 		}),
 	}),
 });

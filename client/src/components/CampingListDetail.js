@@ -6,14 +6,14 @@ import { useSelector } from 'react-redux';
 const CampingListDetail = ({ campId }) => {
 	const camp = useSelector((state) => selectCampsById(state, campId));
 	const [isExpanded, setIsExapnded] = useState(false);
-
-	let slectiveRendering = isExpanded ? (
+	let selectiveRendering = isExpanded ? (
 		<div>
 			<img
 				loading='lazy'
-				src={camp.firstImageUrl || 'no-image-available.jpeg'}
+				src={camp.firstImageUrl || '/images/no-image-available.png'}
 				alt='campingPicture'
 			/>
+			camp ID:{camp.contentId}
 			<GoChevronUp />
 		</div>
 	) : (
@@ -30,7 +30,7 @@ const CampingListDetail = ({ campId }) => {
 			<div className='border-b p-5'>
 				{camp.facltNm}
 				{camp.lineIntro}
-				{slectiveRendering}
+				{selectiveRendering}
 				<p>캠핑장 주소:{camp.addr1}</p>
 				<p>펫입장여부:{camp.animalCmgCl}</p>
 				<a
