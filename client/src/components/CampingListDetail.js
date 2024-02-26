@@ -13,7 +13,6 @@ const CampingListDetail = ({ campId }) => {
 				src={camp.firstImageUrl || '/images/no-image-available.png'}
 				alt='campingPicture'
 			/>
-			camp ID:{camp.contentId}
 			<GoChevronUp />
 		</div>
 	) : (
@@ -21,6 +20,15 @@ const CampingListDetail = ({ campId }) => {
 			<GoChevronDown />
 		</div>
 	);
+	let telephone;
+	camp.tel
+		? (telephone = <span>{camp.tel}</span>)
+		: (telephone = <span>n.a.</span>);
+
+	let amenities;
+	camp.sbrsCl
+		? (amenities = <span>{camp.sbrsCl}</span>)
+		: (amenities = <span>n.a.</span>);
 
 	return (
 		<div
@@ -32,7 +40,9 @@ const CampingListDetail = ({ campId }) => {
 				{camp.lineIntro}
 				{selectiveRendering}
 				<p>캠핑장 주소:{camp.addr1}</p>
+				<p>전화: {telephone}</p>
 				<p>펫입장여부:{camp.animalCmgCl}</p>
+				<p>부대시설: {amenities}</p>
 				<a
 					className='text-black 
 											underline text-xs hover:text-red-500 '
